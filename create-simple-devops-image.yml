@@ -1,0 +1,19 @@
+---
+
+- hosts: all
+  
+  tasks:
+  - name: create docker image
+    command: docker build -t simple-devops-nodejs-image:latest .
+    args:
+      chdir: /opt/docker-nodejs/nodejs_auth
+
+  - name: create tag to image
+    command: docker tag simple-devops-nodejs-image:latest desaijay315/simple-devops-nodejs-image
+  
+  - name: push image to dockerhub
+    command: docker push desaijay315/simple-devops-nodejs-image
+
+  - name: remove docker image from ansible server
+    command: docker rmi simple-devops-nodejs-image:latest desaijay315/simple-devops-nodejs-image
+    ignore_errors: yes  

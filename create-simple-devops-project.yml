@@ -1,0 +1,32 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: stop if we have old docker container
+    command: docker stop simple-devops-nodejs-container
+    ignore_errors: yes
+
+  - name: remove stopped docker container
+    command: docker rm simple-devops-nodejs-container
+    ignore_errors: yes
+
+  - name: remove current docker image
+    command: docker rmi desaijay315/simple-devops-nodejs-image:latest
+    ignore_errors: yes
+#    register: result
+#    failed_when:
+#      - result.rc == 0
+#      - '"docker" not in result.stdout'
+
+
+#  - name: building docker image
+#    command: docker build -t simple-devops-image .
+ #   args:
+#      chdir: /opt/docker
+  
+  - name: pull docker image from dockerHub
+    command: docker pull desaijay315/simple-devops-nodejs-image:latest
+
+  - name: creating docker image
+    command: docker run -d --name simple-devops-nodejs-container -p 5000:5000 desaijay315/simple-devops-nodejs-image:latest
+
